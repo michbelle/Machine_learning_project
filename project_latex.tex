@@ -11,6 +11,10 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
+%\usepackage{biblatex}
+\usepackage[backend=biber]{biblatex}
+\addbibresource {bibliography.bib}
+
 \title{Machine Learning and Data Mining progetto:\\Black Friday}
 \author{Michele Belletti}
 
@@ -140,7 +144,7 @@ Fatto questo possiamo definire un sistema di raccomandazione per l'utente. Utili
 
 
 \subsection{Risultati e discussione}
-I risultati sono i seguenti:
+I risultati sono i seguenti: usando \cite{scikit-learn}
 
 Prima tabella:
 
@@ -186,6 +190,9 @@ Questi risultati dimostrano che il processo così costruito non fornisce una sti
 \item oppure generare diversi algoritmi, uno per utente, che permetterà così di descrivere meglio le sue preferenze in più ridurrà il tempo di stima ma aumenta lo spazio in memoria perchè l'algorimo è definito in modo univoco.
 \end{itemize}
 Il codice è disponibile a \url{https://github.com/michbelle/Machine_learning_project.git}
+
+\nocite{*}
+\printbibliography[title=Bibliografia]{}
 
 
 \end{document}
