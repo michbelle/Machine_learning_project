@@ -32,6 +32,7 @@
 Data l'evoluzione esponenziale dei negozi online bisogna trovare soluzioni per rendere competitiva una piattaforma rispetto ad un altra. Le idee proposte sono una stima delle vendite e una stima della categoria che all'utente potrebbe interessare. Queste stime ci permettono di avere una conoscenza a priori del volume di vendita di tale piattaforma e anche ci permette di gestire al meglio le vendite potendo così ricavare un utile maggiore.
 
 \section{Indici di valutazione e prestazione}
+I sistemi che andremo ad utilizzare saranno basati sulla libreria python: scikit-learn \cite{scikit-learn} .
 Il metodo che andremo ad utilizzare per la valutazione del modello sarà basata sulla percentuale di successo della predizione e del valore dell'errore RSME.
 Il rapporto fra i dati utilizzati per la creazione della modello e i dati utilizzati per la realizzazione della verifica saranno rispettivamente l'80 \% dei dati a disposizione per il primo mentre il rimanente 20\% per la verifica.
 
@@ -44,7 +45,7 @@ Data la presenza di valori non definiti (NaN) nella categoria dei prodotti 2 e 3
 \item assegneremo un valore scorrelato al sistema che descrivono, in modo che non facciano variare la stima, in più aggiungeremo dei dati che ci permetteranno di stimare più correttamente.
 \end{itemize}
 
-Poi andremo a determinare un algoritmo per la determinazione della categoria migliore di prodotti da consigliare ad un utente. Tale sistema sarà costruito in modo generale in modo da funzionare in qualsiasi condizione, cioè sia utenti già inscritti che utenti nuovi.
+Poi andremo a realizzare un modello di predizione per la determinazione della categoria migliore di prodotti da consigliare ad un utente in base agli acquisti fatti durante il Black Friday. Tale sistema sarà costruito in modo generale in modo da funzionare in qualsiasi condizione, cioè sia utenti già inscritti che utenti nuovi.
 
 \section{Valutazione sperimentale}
 Inizieremo ora a creare il sistema in base alle ipotesi sopra descritte.
@@ -144,15 +145,15 @@ Fatto questo possiamo definire un sistema di raccomandazione per l'utente. Utili
 
 
 \subsection{Risultati e discussione}
-I risultati sono i seguenti: usando \cite{scikit-learn}
+I risultati sono i seguenti:
 
 Prima tabella:
 
 \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|}
 \hline
 Algoritmi &Linear Regression          & Decision tree regression         &random forest regression      \\
-\hline
-Risultati & 10.28\%            & 63.90\%     & 63.00\%          \\
+%\hline
+%Risultati & 10.28\%            & 63.90\%     & 63.00\%          \\
 \hline
 RMSE     & 4708     & 2954                & 3008           \\
 \hline
@@ -163,8 +164,8 @@ Seconda tabella:
 \begin{tabular}{|p{0.2\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|}
 \hline
 Algoritmi &Linear Regression          & Decision Tree Regression         &Random Forest Regression      \\
-\hline
-Risultati &24.00\%            & 70.16\%    & 68.22\%          \\
+%\hline
+%Risultati &24.00\%            & 70.16\%    & 68.22\%          \\
 \hline
 RMSE &4344 &2685 &2802\\
 \hline
@@ -176,15 +177,18 @@ Terza tabella:
 
 \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|}
 \hline
-Algoritmi &Linear Regression          & Decision tree Classifier         &random forest Classifier      \\
+%Algoritmi &Linear Regression          & Decision tree Classifier         &random forest Classifier      \\
+%\hline
+%Risultati & 10.71\%           & 86.79\%    & 82.72\%          \\
+%\hline
+%RMSE &3.552 &2.56 &2.807\\
+Algoritmi          & Decision tree Classifier         &Random forest Classifier      \\
 \hline
-Risultati & 10.71\%           & 86.79\%    & 82.72\%          \\
-\hline
-RMSE &3.552 &2.56 &2.807\\
+Risultati           & 86.79\%    & 82.72\%  \\
 \hline
 \end{tabular}
 
-Questi risultati dimostrano che il processo così costruito non fornisce una stima buona del tipo di prodotto consigliato. Per migliorare la stima si deve tener conto dell'utente, il che può essere fatto in due casi:
+I risultati ottenuti forniscono una buona predizione sul prossimo acquisto che un determinato utente andrà a compiere. Per migliorare ulteriormente  la stima si deve tener conto dell'utente, il che può essere fatto in due casi:
 \begin{itemize}
 \item l'aggiunta dell'utente all'algoritmo complessivo, il che porta ad avere un alto tempo di calcolo e il problema  di quando si aggiunge un nuovo utente;
 \item oppure generare diversi algoritmi, uno per utente, che permetterà così di descrivere meglio le sue preferenze in più ridurrà il tempo di stima ma aumenta lo spazio in memoria perchè l'algorimo è definito in modo univoco.
