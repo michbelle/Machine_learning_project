@@ -1,5 +1,7 @@
 % !TEX encoding = UTF-8 Unicode
 \documentclass{article}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb}
 \usepackage{paralist}
@@ -11,9 +13,12 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
-%\usepackage{biblatex}
-\usepackage[backend=biber]{biblatex}
-\addbibresource {bibliography.bib}
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
 
 \title{Machine Learning and Data Mining progetto:\\Black Friday}
 \author{Michele Belletti}
@@ -29,31 +34,33 @@
 
 
 \section{Identificazione del problema}
-Data l'evoluzione esponenziale dei negozi online bisogna trovare soluzioni per rendere competitiva una piattaforma rispetto ad un altra. Le idee proposte sono una stima delle vendite e una stima della categoria che all'utente potrebbe interessare. Queste stime ci permettono di avere una conoscenza a priori del volume di vendita di tale piattaforma e anche ci permette di gestire al meglio le vendite potendo così ricavare un utile maggiore.
+Questo articolo ha due principali obiettivi:
+Il primo è di confrontare  i risultati di diversi algoritmi per identificare quale sia il migliore per la determinazione della qunatità spesa da un utente durante l'evento del Black Friday usando i dati a disposizione \cite{data} . In questo caso abbiamo anche dimostrato come, dopo un analisi dei dati e una loro manipolazione in base alle conoscenza che si riescono ad ottenere dopo l'analisi, possa modificare la stima.
+Questo tipo di stimatore permette ad una azienda di fare una stima dei guadagni durante questi tipo di eventi il che puo essere utilizzato per incrementare gli introiti e valutare bene la spesa che l'azienda possa mettere in atto per incentivare l'affluenza.
+
+il secondo è quello di confrontare due algoritmi di classificazione per determinare quale categoria del prodotto esso ha acquistato. Questo modello così realizzato permette una migliore gestione del magazzino perchè fornisce un idea delle abitudine degli utenti inscritti, inoltre permette di creare pubblicità più mirate ad un utente in modo da aumentare gli utili dell'azienda. 
+
 
 \section{Indici di valutazione e prestazione}
-I sistemi che andremo ad utilizzare saranno basati sulla libreria python: scikit-learn \cite{scikit-learn} .
-Il metodo che andremo ad utilizzare per la valutazione del modello sarà basata sulla percentuale di successo della predizione e del valore dell'errore RSME.
-Il rapporto fra i dati utilizzati per la creazione della modello e i dati utilizzati per la realizzazione della verifica saranno rispettivamente l'80 \% dei dati a disposizione per il primo mentre il rimanente 20\% per la verifica.
+Per la realizzazione dei modelli di stima della quantità dei soldi spesi e del tipo di categoria che un utente compra sono stati utilizzati gli algoritmi della libreria python: scikit-learn \cite{scikit-learn} .
+I sistemi di valutazione che abbiamo adottato per questo articolo sono, per la determinazione della quantità di soldi spesi, un confronto sul valore RMSE mentre per la stima del tipo di categoria del prodotto abbiamo utilizzato un indicazione percentuale del corretto individuamento della categoria del prodotto.
+Per tale verifica abbiamo utilizzato l'80 \% dei dati a disposizione per la realizzazione del modello mentre il rimanente 20\% per la verifica.
 
 \section{Soluzione Proposta}
-Supponendo il problema  lineare, perciò andremo a risolvere un problema di regressione. Gli algoritmi che andremo ad utilizzare sono: regressione lineare, decision tree regression e random forest regression.
-
-Data la presenza di valori non definiti (NaN) nella categoria dei prodotti 2 e 3, opteremo per 2 diversi approcci:
+Gli algoritmi utilizzati per la creazione dello stimatore della quantità di soldi spesi da un utente sono: regressione lineare, decision tree regression e random forest regression.
+L'analisi dei dati ha riportato la presenza di informazioni mancanti (value NaN) nelle categorie dei prodotti 2 e 3. Questo tipo di informazione, data la mancanza di documentazione a riguardo, ci ha portato alla realizzazione di due modelli costruiti usando i dati nei seguenti modi:
 \begin{itemize}
-\item elimineremo le categorie 2 e 3, ipotizzando che siano sottocategorie della prima, cioè categorie meno importanti per descrive il prodotto;
-\item assegneremo un valore scorrelato al sistema che descrivono, in modo che non facciano variare la stima, in più aggiungeremo dei dati che ci permetteranno di stimare più correttamente.
+\item per il primo metodo abbiamo optato per la diretta eliminazione delle categorie 2 e 3, ipotizzando che contengano informazioni riguardanti alla sottocategoria del prodotto, cioè descrizioni del prodotto di rilievo minore rispetto alla categoria principale;
+\item per il secondo metodo abbiamo assegnato una variabile scorrelata (fillna(-2.0) (le altre variabili sono maggiori di 0) ai dati presenti nelle categorie 2 e 3, in modo tale che la sua presenza non fornisca delle informazioni erronee e possa deteriorare il modello. Inoltre aggiungeremo informazioni ricavate dopo l'analisi dei dati, che costituiscono in variabili che definiscono la quantità di operazioni di quel tipo, come spiegato nella sezione successiva.
 \end{itemize}
 
-Poi andremo a realizzare un modello di predizione per la determinazione della categoria migliore di prodotti da consigliare ad un utente in base agli acquisti fatti durante il Black Friday. Tale sistema sarà costruito in modo generale in modo da funzionare in qualsiasi condizione, cioè sia utenti già inscritti che utenti nuovi.
+Ottenuti i risultati di questi due metodi abbiamo optato nell'utilizzo dei dati nel secondo caso per la creazione dell'algortmo che determina il prodotto che un utente ha acquistato durante il Black Friday· Gli algoritmi della libreria che abbiamo utilizzato sono Decision Tree Classifier e  Random Forest Classifier.
 
 \section{Valutazione sperimentale}
-Inizieremo ora a creare il sistema in base alle ipotesi sopra descritte.
+Per la realizzazione del migliore modello predittivo è necessaria un analisi dei dati a disposizione. Il che come verrà dimostrato permette una migliore stima  del modello.
 
 \subsection{Data}
-La prima cosa che si deve fare per la descrizione e la realizzazione di un modello è l'analisi dei dati a disposizione.
-
-I dati a nostra disposizione sono gli ordini effettuati durante il Black Friday e sono contenuti in un file csv avente le seguenti informazioni:
+Come anticipato, i dati a nostra disposizione sono gli ordini effettuati durante il Black Friday e sono costituiti da queste informazioni:
 \begin{itemize}
 \item L'utente attraverso il suo codice identificativo UserID;
 \item Il prodotto che l'utente ha comprato ProductID;
@@ -66,7 +73,15 @@ I dati a nostra disposizione sono gli ordini effettuati durante il Black Friday 
 \item E la quantità dei soldi spesi: Purchase.
 \end{itemize}
 
-Ora analizzeremo i dati in funzione del numero di ordini (grafici 1-2-3-4-5-6):
+Analizzando, con l'ausilio dei grafici sotto riportati (grafici 1-2-3-4-5-6), che rappresentano ogni variabile rispetto al numero di ordini effettuati dai clienti si nota che :
+
+\begin{itemize}
+\item persone di età tra i 26-35 anni;
+\item le città di categoria B;
+\item i maschi e persone single;
+\item le persone con un occupazione di tipo 0, 4 e 7;
+\item e le persone che sono da circa un anno in città.
+\end{itemize}
 
 \begin{figure}[htp!]
 \centering
@@ -80,26 +95,10 @@ Ora analizzeremo i dati in funzione del numero di ordini (grafici 1-2-3-4-5-6):
 %%\abel{fig:...}
 \end{figure}
 
-Si vede che gli ordini sono fatti principalmente da:
-\begin{itemize}
-\item persone di età tra i 26-35 anni, età nella quale si è più inclini ad utilizzare i mezzi della rete per acquistare i prodotti e si ha più disponibilità economica;
-\item le città di categoria B;
-\item i maschi e persone single;
-\item le persone con un occupazione di tipo 0, 4 e 7;
-\item e le persone che sono da circa un anno in città.
-\end{itemize}
+Quest'analisi ci fornisce informazioni riguardo ai comportamenti sociali che questo tipo di eventi crea.
 
-Analizzando la matrice di correlazione che esprime il grado di dipendenza tra due variabili si vede che non c'è una vera correlazione tra i dati a disposizione e il valore del purchase.
-Questo vale anche per il caso di voler suggerire una tipologia di prodotto, tranne che per le sottocategorie dove c'è una buona correlazione, ma non conoscendo neanche la prima categoria non possiamo neanche conoscere le sottocategorie il che ci porta a eliminarle nel calcolo della stima.
+Analizzando ora rispetto alla variabile da stimare purchase si vede che:( vengono riportati solamente i dati rispetto alla stato civile, poiche i grafici non differiscono l'uno rispetto all'altro, inoltre possono essere visti nella citazione \cite{code} ).
 
-\begin{figure}[htp!]
-\centering
-\frame{\includegraphics[width=0.8\textwidth]{ima/crosscorrelazione.png}}
-%%\caption{...}
-%%\abel{fig:...}in
-\end{figure}
-
-Andiamo ora ad analizzare le variabili indipendenti rispetto alla variabile Purchase che vogliamo prevedere:
 \begin{figure}[htp!]
 \centering
 \frame{\includegraphics[width=0.3\textwidth]{ima/mean_marital_purc.png}}
@@ -108,10 +107,10 @@ Andiamo ora ad analizzare le variabili indipendenti rispetto alla variabile Purc
 %%\abel{fig:...}
 \end{figure}
 
-Si ha che i grafici valutati con la media non differiscono tra i valori assegnati, l'unico grafico che non è uniforme in tal caso è quello che definisce la quantità del prodotto rispetto alla categoria.
-Dato che la media non appare come dato importante ma la loro quantità si, per migliorare la stima andremo anche a tener conto della sua quantità. Questa aggiunta permette di avere una stima migliore, come vedremo in seguito.
+Dall'analisi dei grafici si vede che la media non fornisce informazioni utili a realizzare la predizione rispetto alle variabili note. L'informazione determinante risiede nella loro quantità perciò aggiungeremo come dato il volume per ogni categoria. cioè quantità: nome: Age\_ Count 	Occupation\_ Count 	Product\_ Category\_ 1\_ Count Product\_ Category\_ 2\_ Count 	Product\_ Category\_ 3\_ Count 	Product\_ ID\_ Count. 
+Questa aggiunta ha permesso di avere una stima migliore rispetto al caso di eliminazione totale del dato, come evidenziato nella tabella 2.
 
-Invece questo cambia nel caso della categoria del prodotto(grafici 9-10):
+Queste affermazioni non sono conducibili per quanto riguarda la categoria del prodotto come si vede nei  grafici 9-10:
 \begin{figure}[htp!]
 \centering
 \frame{\includegraphics[width=0.3\textwidth]{ima/sum_cat_pur.png}}
@@ -124,23 +123,28 @@ Analizzati i dati andremo a realizzare il modello:
  
 
 \subsection{Procedimento}
+Attualmente gli algoritmi gestiscono solo variabili di tipo numerico perciò abbiamo modificato la descrizione del dato dividentdolo ulteriormente in sottocategorie e assegnado uno 0 se non apparteneva a tale sottocategoria oppure un 1 se ci apparteneva.
 
-I dati verranno tutti riportati in codice binario in modo che gli algoritmi possano gestirlo.
-
-Come definito prima andremo ad utilizzare i seguenti algoritmi con le seguenti impostazioni:
+qui sono riportati gli algoritmi scelti e le loro variabile, le altre variabili non elencate sono state scelte quelle di default delle librerie:
 \begin{itemize}
 \item linear regression : normalizzazione attiva;
 \item DecisionTreeRegressor : max\_ depth=15, min\_ samples\_ leaf=100;
 \item Random Forest: max\_ depth=8, min\_ samples\_ leaf=150.
 \end{itemize}
 
-Adesso valuteremo questi 3 algoritmi con i diversi metodi proposti:
-il primo metodo utilizzato per predirre la quanti di soldi spesi sarà basato sull'eliminazione dei dati delle categorie dei prodotti 2 e 3. Elimineremo anche l'identificazione dell'utente perchè non influisce sulla predizione della spesa, così come il codice del prodotto. Queste due ultime eliminazioni permettono di stimare meglio l'aggiunta di un nuovo utente però peggiora la stima per un vecchio utente, dato che non c'è correlazione tra i suoi vecchi ordini. I risultati sono riportati nella prima tabella nella sezione risultati e discussione.
+mentre per la seconda:
+\begin{itemize}
+\item DecisionTreeRegressor : max\_ depth=15, min\_ samples\_ leaf=100;
+\item Random Forest: max\_ depth=8, min\_ samples\_ leaf=150.
+\end{itemize}
 
-Il secondo metodo utilizza anche i dati della categoria 2 e 3, naturalmente si avrà una stima migliore dato che aggiungo altri dettagli all'ordine(13\%). In più aggiungo anche il numero totale degli ordini con quel valore di eta, occupazione, tipo di categoria e identificazione del prodotto. Tali dati aggiuntivi permette di stimare meglio il risultato. I risultati sono riportati nella seconda tabella.
+come descritto precedentemente abbiamo utilizzato i dati nel seguente modo:
+il primo metodo utilizzato per predirre la quanti di soldi spesi è basato sull'eliminazione dei dati delle categorie dei prodotti 2 e 3, eliminando anche l'identificazione dell'utente perchè non influisce sulla predizione della spesa, così come il codice del prodotto.
+Queste due ultime eliminazioni permettono di stimare meglio l'aggiunta di un nuovo utente però peggiorano la stima per un vecchio utente, dato che non c'è correlazione tra i suoi vecchi ordini. I risultati sono riportati nella prima tabella nella sezione risultati e discussione.
 
+Il secondo metodo utilizza anche i dati della categoria 2 e 3 in più abbiamo anche tenuto conto delle rispettive quantità vendute e tenuto conto anche della quantità delle varie caratteristiche degli utenti, utilizzando tali dati abbiamo ottenuto una una stima migliore dato che aggiungo altre informazioni che descrivono i prodotti.
 
-Fatto questo possiamo definire un sistema di raccomandazione per l'utente. Utilizzeremo i dati per l'ultimo metodo ed elimineremo ogni conoscenza rispetto alla categoria del prodotto. I risultati sono riportati nella terza tabella:
+Utilizzando i dati nella struttura del secondo metodo ed eliminando ogni variabile legata al tipo di prodotto 'Product\_ ID', 'Product\_ Category\_ 2', 'Product\_ Category\_ 3','Product\_ Category\_ 1\_ Count', 'Product\_ Category\_ 2\_ Count', 'Product\_ Category\_ 3\_ Count', 'Product\_ ID\_ \_ Count'] abbiamo ottenuto i risultati riportati nella terza tabella:
 
 
 
@@ -155,7 +159,7 @@ Algoritmi &Linear Regression          & Decision tree regression         &random
 %\hline
 %Risultati & 10.28\%            & 63.90\%     & 63.00\%          \\
 \hline
-RMSE     & 4708     & 2954                & 3008           \\
+RMSE (in dollari)     & 4708     & 2954                & 3008           \\
 \hline
 \end{tabular}
 
@@ -167,11 +171,11 @@ Algoritmi &Linear Regression          & Decision Tree Regression         &Random
 %\hline
 %Risultati &24.00\%            & 70.16\%    & 68.22\%          \\
 \hline
-RMSE &4344 &2685 &2802\\
+RMSE (in dollari) &4344 &2685 &2802\\
 \hline
 \end{tabular}
 
-Si ottiene che il migliore risultato è il secondo caso, cioè con i dati aggiuntivi definiti  prima. In più l'algoritmo  Decision tree regression ottiene una migliore predizione e un minore RMSE.
+come descritto in precedenza il migliore risultato sì è ottenuto modificando la struttura dei dati in modo da ottenere informazioni aggiuntive. Inoltre l'algorimo che meglio ha stimato è il Decision tree regression come evidenziato dal valore minimo di RMSE.
 
 Terza tabella: 
 
@@ -188,12 +192,14 @@ Risultati           & 86.79\%    & 82.72\%  \\
 \hline
 \end{tabular}
 
-I risultati ottenuti forniscono una buona predizione sul prossimo acquisto che un determinato utente andrà a compiere. Per migliorare ulteriormente  la stima si deve tener conto dell'utente, il che può essere fatto in due casi:
-\begin{itemize}
-\item l'aggiunta dell'utente all'algoritmo complessivo, il che porta ad avere un alto tempo di calcolo e il problema  di quando si aggiunge un nuovo utente;
-\item oppure generare diversi algoritmi, uno per utente, che permetterà così di descrivere meglio le sue preferenze in più ridurrà il tempo di stima ma aumenta lo spazio in memoria perchè l'algorimo è definito in modo univoco.
-\end{itemize}
-Il codice è disponibile a \url{https://github.com/michbelle/Machine_learning_project.git}
+I risultati ottenuti hanno dimostrato che un modello Decision tree Classifier ha detrminato la miglior stima del tipo di categoria del prodotto.
+
+\section{Conclusioni}
+Il primi algoritmi ci hanno permesso di determinare che il decision tree regression con una gestione dei dati tenendo conto della loro rispettiva quantita ha fornito la miglior stima della variabile purchase.
+mentre grazie alla struttura dei dati realizzata per il primo caso ci ha fornito un ottimo rislultato di stima della categoria. tale stima può esser eutilizzata come metodo per aumentare i profitti.
+Un altro metodo per migliorare la stima sarebbe creare algoritmi ad och per ogni utente oppure un algorimo complessivo che tieene conto degli utenti. Il problema di questo tipo sarebbe l'aggiunta di un nuovo cliente e la pesantezza di molteplici algoritmi rispettivamente al contrario.
+CIAO PAPA
+GO FINI PER STA MATTINA
 
 \nocite{*}
 \printbibliography[title=Bibliografia]{}
